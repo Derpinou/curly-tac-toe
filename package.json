@@ -11,6 +11,7 @@
     "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
     "deploy": "nuxt build && wrangler deploy"
   },
   "dependencies": {
