@@ -2,22 +2,32 @@
 export default defineNuxtConfig({
   // https://nuxt.com/modules
   modules: [
-    '@nuxthub/core',
     '@nuxt/eslint',
   ],
 
-  // https://devtools.nuxt.com
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
-  // Env variables - https://nuxt.com/docs/getting-started/configuration#environment-variables-and-private-tokens
+  compatibilityDate: '2026-10-15',
 
-  // https://nuxt.com/docs/getting-started/upgrade#testing-nuxt-4
-  future: { compatibilityVersion: 4 },
-  compatibilityDate: '2024-07-30',
+  nitro: {
+    preset: 'cloudflare_module',
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+      wrangler: {
+        ai: {
+          binding: 'AI',
+        },
+      },
+    },
+  },
 
-  // https://hub.nuxt.com/docs/getting-started/installation#options
-  hub: {
-    ai: true
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        types: ['node', '@cloudflare/workers-types'],
+      },
+    },
   },
 
   // https://eslint.nuxt.com
