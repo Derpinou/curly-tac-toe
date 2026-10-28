@@ -1,12 +1,12 @@
-import type { PlayBody } from '~~/types'
+import type { PlayBody, ResponsePlayBody } from '~~/types'
 
-export default defineEventHandler(async (event): Promise<any> => {
+export default defineEventHandler(async (event): Promise<ResponsePlayBody> => {
   const body: PlayBody = await readBody(event).then(x => x)
   const { matrix } = body
   const input = `
 You are a player of tic-tac-toe.
 The current game state is represented by a 3x3 matrix:
-	Game state:
+Game state:
 ${JSON.stringify(matrix)}
 
 Rules:
@@ -18,7 +18,8 @@ Rules:
 6. Do not include any text, commentary, or explanation.
 
 Now return the result.
-	`
+`
+  console.log(input)
   // 1. You have to play even if you've lost
   // 4. You can't edit cell for `true` or `null` value
 

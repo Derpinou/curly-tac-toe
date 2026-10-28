@@ -14,8 +14,8 @@ const matrix = useState('matrix', (): Array<Array<true | false | null>> => {
 
 // Gestion du clic sur une cellule
 const onCellClick = async (rowIndex: number, cellIndex: number) => {
-  if (matrix.value[rowIndex][cellIndex] === null) {
-    matrix.value[rowIndex][cellIndex] = true
+  if ((<Array<boolean|null>>matrix.value[rowIndex])[cellIndex] === null) {
+    (<Array<boolean|null>>matrix.value[rowIndex])[cellIndex] = true
   }
 
   pendingReq.value = true
@@ -35,32 +35,34 @@ const onCellClick = async (rowIndex: number, cellIndex: number) => {
 </script>
 
 <template>
-  <div class="grid">
-    <div
-      v-for="(row, rowIndex) in matrix"
-      :key="`row-${rowIndex}`"
-      class="row"
-    >
+  <div>
+    <div class="grid">
       <div
-        v-for="(cell, cellIndex) in row"
-        :key="`cell-${rowIndex}-${cellIndex}`"
-        :class="`cell ${cell === null ? 'free' : 'not_really_free'}`"
-        @click="onCellClick(rowIndex, cellIndex)"
+        v-for="(row, rowIndex) in matrix"
+        :key="`row-${rowIndex}`"
+        class="row"
       >
-        <div v-if="cell == true">
-          <div class="circle_parent">
-            <div class="circle_child" />
+        <div
+          v-for="(cell, cellIndex) in row"
+          :key="`cell-${rowIndex}-${cellIndex}`"
+          :class="`cell ${cell === null ? 'free' : 'not_really_free'}`"
+          @click="onCellClick(rowIndex, cellIndex)"
+        >
+          <div v-if="cell == true">
+            <div class="circle_parent">
+              <div class="circle_child" />
+            </div>
           </div>
-        </div>
-        <div v-else-if="cell == false" class="cross_container">
-          <div class="cross_first" />
-          <div class="cross_last" />
+          <div v-else-if="cell == false" class="cross_container">
+            <div class="cross_first" />
+            <div class="cross_last" />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div v-if="pendingReq">
-    En attente de la stupidité artificielle...
+    <div v-if="pendingReq">
+      En attente de la stupidité artificielle...
+    </div>
   </div>
 </template>
 
@@ -93,7 +95,7 @@ const onCellClick = async (rowIndex: number, cellIndex: number) => {
 }
 
 .not_really_free {
-	cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .circle_parent {
