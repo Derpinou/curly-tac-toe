@@ -1,7 +1,8 @@
 import type { PlayBody, ResponsePlayBody } from '~~/types'
 import { createAI } from 'agents/models/ai-sdk'
-import { generateText } from 'ai'
+import { generateText, Output } from 'ai'
 import { env } from 'cloudflare:workers'
+import { z } from 'zod'
 
 export default defineEventHandler(async (event): Promise<ResponsePlayBody> => {
   const body: PlayBody = await readBody(event).then(x => x)
@@ -9,18 +10,23 @@ export default defineEventHandler(async (event): Promise<ResponsePlayBody> => {
   const input = `
 You are a player of tic-tac-toe.
 The current game state is represented by a 3x3 matrix:
+
 Game state:
 ${JSON.stringify(matrix)}
 
 Rules:
-1. Arrays on matrix represents a row
-2. You can't remove / move / replace / edit a \`true\` or \`false\` value
-3. Replace once \`null\` value with \`false\` to maximize your chances of winning at tic-tac-toe.
-4. Output only the updated game state as a JSON object.
-5. Strict format: \`{"result": [[null, null, null], [null, null, null], [null, null, null]]}\`
-6. Do not include any text, commentary, or explanation.
 
-Now return the result.
+1. Each array in the matrix represents a row.
+2. You cannot remove, move, replace, or edit any existing true or false value.
+3. You MUST play: replace exactly one null value with false to maximize your chances of winning.
+4. Returning the input matrix unchanged is strictly forbidden.
+5. The output matrix must differ from the input matrix in exactly one cell: null becomes false. Every other cell must remain unchanged.
+6. Output only the updated game state as a JSON object with this structure:
+   {"result": [[null, null, null], [null, null, null], [null, null, null]]}
+7. Do not include any text, Markdown, code fences, commentary, or explanation.
+
+Before responding, verify that you changed exactly one null to false.
+Now return only the JSON result.
 `
   const ai = createAI({ binding: env.AI })
 
@@ -28,8 +34,16 @@ Now return the result.
     model: ai('@cf/meta/llama-3.3-70b-instruct-fp8-fast'),
     prompt: input,
     temperature: 0,
+    maxOutputTokens: 128,
+
+    output: Output.object({
+      schema: z.object({
+        result: z.array(
+          z.array(z.boolean().nullable()).length(3),
+        ).length(3),
+      }).strict(),
+    }),
   })
-  console.log(response)
 
   return JSON.parse(response)
 })
