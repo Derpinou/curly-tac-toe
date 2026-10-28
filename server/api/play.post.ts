@@ -1,6 +1,7 @@
 import type { PlayBody, ResponsePlayBody } from '~~/types'
 import { createAI } from 'agents/models/ai-sdk'
 import { generateText, Output } from 'ai'
+import type {} from '../types/cloudflare' // For nuxt typecheck
 import { env } from 'cloudflare:workers'
 import { z } from 'zod'
 
