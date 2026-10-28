@@ -1,0 +1,57 @@
+name: Signaler un bug
+description: Décrire un problème et les étapes permettant de le reproduire.
+title: "[Bug] "
+body:
+  - type: textarea
+    id: observed-behavior
+    attributes:
+      label: Comportement observé
+      description: Décris ce qui ne fonctionne pas.
+      placeholder: Après mon coup, l'IA joue dans une case déjà occupée.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Étapes pour reproduire
+      description: Indique les actions précises et, si utile, l'état de la grille.
+      placeholder: |
+        1. Ouvrir une nouvelle partie.
+        2. Jouer dans la case…
+        3. Attendre la réponse de l'IA.
+        4. Observer…
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Résultat attendu
+      placeholder: L'IA doit jouer dans une case vide sans modifier les autres cases.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environnement concerné
+      options:
+        - Production
+        - Preview
+        - Développement local
+        - Je ne sais pas
+    validations:
+      required: true
+
+  - type: input
+    id: browser-device
+    attributes:
+      label: Navigateur et appareil
+      placeholder: Safari sur iPhone, Chrome sur Windows…
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Informations complémentaires
+      description: Ajoute si utile l'URL concernée, le commit, des captures ou les messages d'erreur.
