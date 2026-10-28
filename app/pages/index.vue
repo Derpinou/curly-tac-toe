@@ -14,6 +14,10 @@ const matrix = useState('matrix', (): Array<Array<true | false | null>> => {
 
 // Gestion du clic sur une cellule
 const onCellClick = async (rowIndex: number, cellIndex: number) => {
+  if (pendingReq.value) {
+    return
+  }
+
   const row = matrix.value[rowIndex]
 
   if (row && row[cellIndex] === null) {
@@ -47,7 +51,7 @@ const onCellClick = async (rowIndex: number, cellIndex: number) => {
         <div
           v-for="(cell, cellIndex) in row"
           :key="`cell-${rowIndex}-${cellIndex}`"
-          :class="`cell ${cell === null ? 'free' : 'not_really_free'}`"
+          :class="`cell ${cell === null && !pendingReq ? 'free' : 'not_really_free'}`"
           @click="onCellClick(rowIndex, cellIndex)"
         >
           <div v-if="cell == true">
