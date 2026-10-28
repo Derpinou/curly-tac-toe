@@ -5,5 +5,22 @@
   "name": "curly-tac-toe",
   "compatibility_date": "2026-10-01",
   "observability": { "enabled": true },
-  "ai": { "binding": "AI", "remote": true }
+  "ai": { "binding": "AI", "remote": true },
+  "workers_dev": false,
+  "preview_urls": false,
+
+  "routes": [
+    {
+      "pattern": "curly.dromaderp.fr",
+      "custom_domain": true,
+      "previews_enabled": true,
+      "enabled": false
+    }
+  ],
+
+  "previews": {
+    "ai": {
+      "binding": "AI"
+    }
+  }
 }
