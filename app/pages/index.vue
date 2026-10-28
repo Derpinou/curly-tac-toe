@@ -14,8 +14,10 @@ const matrix = useState('matrix', (): Array<Array<true | false | null>> => {
 
 // Gestion du clic sur une cellule
 const onCellClick = async (rowIndex: number, cellIndex: number) => {
-  if ((<Array<boolean|null>>matrix.value[rowIndex])[cellIndex] === null) {
-    (<Array<boolean|null>>matrix.value[rowIndex])[cellIndex] = true
+  const row = matrix.value[rowIndex]
+
+  if (row && row[cellIndex] === null) {
+    row[cellIndex] = true
   }
 
   pendingReq.value = true
