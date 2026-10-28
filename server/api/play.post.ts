@@ -49,8 +49,6 @@ Return only the updated game state as a JSON object with the key \`result\`, for
     prompt: input,
   })
 
-
-
   let res
   try {
     /// .replaceAll(/[^a-zA-Z0-9\[\]",]'/, '')
@@ -66,5 +64,5 @@ Return only the updated game state as a JSON object with the key \`result\`, for
 
    */
 
-  return { result: matrix };
+  return { result: matrix }
 })

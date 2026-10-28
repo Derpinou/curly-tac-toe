@@ -12,15 +12,6 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2026-10-15',
 
-  // https://eslint.nuxt.com
-  eslint: {
-    config: {
-      stylistic: {
-        quotes: 'single',
-      },
-    },
-  },
-
   nitro: {
     preset: 'cloudflare_module',
     cloudflare: {
@@ -29,6 +20,15 @@ export default defineNuxtConfig({
       deployConfig: true,
       // Nitro s'appuie sur des API Node (Buffer…) : nodejs_compat les fournit, sans polyfills dans le bundle.
       nodeCompat: true,
+    },
+  },
+
+  // https://eslint.nuxt.com
+  eslint: {
+    config: {
+      stylistic: {
+        quotes: 'single',
+      },
     },
   },
 

@@ -1,7 +1,7 @@
 export type Matrix = Array<Array<true | false | null>>
 export type PlayBody = {
-	matrix: Matrix
+  matrix: Matrix
 }
 export type ResponsePlayBody = {
-	result: Matrix
+  result: Matrix
 }
