@@ -43,10 +43,13 @@ Return only the updated game state as a JSON object with the key \`result\`, for
   // Return me only output result without explains/commentary a JSON array formatted like the game state
 
   // console.log(input);
+
+  /*
   const { response } = await hubAI().run('@cf/meta/llama-3.1-8b-instruct', {
     prompt: input,
-
   })
+
+
 
   let res
   try {
@@ -60,4 +63,8 @@ Return only the updated game state as a JSON object with the key \`result\`, for
     res = { result: matrix }
   }
   return res
+
+   */
+
+  return { result: matrix };
 })
