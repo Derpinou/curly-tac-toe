@@ -1,67 +1,71 @@
 <script lang="ts" setup>
-	import type {ResponsePlayBody} from "~~/types";
+import type { ResponsePlayBody } from '~~/types'
 
-	const pendingReq = ref(false);
+const pendingReq = ref(false)
 
-    // Initialiser une matrice 3x3 avec des valeurs nulles
-    let matrix = useState('matrix', () : Array<Array<true|false|null>> => {
-      return [
-          [null, null, null],
-          [null, null, null],
-          [null, null, null]
-      ]
-    })
+// Initialiser une matrice 3x3 avec des valeurs nulles
+const matrix = useState('matrix', (): Array<Array<true | false | null>> => {
+  return [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ]
+})
 
-    // Gestion du clic sur une cellule
-    const onCellClick = async (rowIndex: number, cellIndex: number) => {
-	    if (matrix.value[rowIndex][cellIndex] === null) {
-		    matrix.value[rowIndex][cellIndex] = true;
-	    }
+// Gestion du clic sur une cellule
+const onCellClick = async (rowIndex: number, cellIndex: number) => {
+  const row = matrix.value[rowIndex]
 
-		pendingReq.value = true;
+  if (row && row[cellIndex] === null) {
+    row[cellIndex] = true
+  }
 
-		const data = await $fetch<ResponsePlayBody>("/api/play", {
-			method: "POST",
-			body: {
-				matrix: matrix.value
-			}
-		});
-		pendingReq.value = false;
-		console.log(data)
-		matrix.value = data["result"];
-    };
+  pendingReq.value = true
 
-	// TODO Quand on à perdu -> t'as derpu -> animation remise en place des lettres en mode powerpoint de 5eme en techno
+  const data = await $fetch<ResponsePlayBody>('/api/play', {
+    method: 'POST',
+    body: {
+      matrix: matrix.value,
+    },
+  })
+  pendingReq.value = false
+  console.log(data)
+  matrix.value = data['result']
+}
 
+// TODO Quand on à perdu -> t'as derpu -> animation remise en place des lettres en mode powerpoint de 5eme en techno
 </script>
 
-
 <template>
-  <div class="grid">
-    <div
+  <div>
+    <div class="grid">
+      <div
         v-for="(row, rowIndex) in matrix"
         :key="`row-${rowIndex}`"
         class="row"
-    >
-      <div
+      >
+        <div
           v-for="(cell, cellIndex) in row"
           :key="`cell-${rowIndex}-${cellIndex}`"
           :class="`cell ${cell === null ? 'free' : 'not_really_free'}`"
           @click="onCellClick(rowIndex, cellIndex)"
-      >
-        <div v-if="cell == true">
-          <div class="circle_parent">
-            <div class="circle_child"></div>
+        >
+          <div v-if="cell == true">
+            <div class="circle_parent">
+              <div class="circle_child" />
+            </div>
           </div>
-        </div>
-        <div v-else-if="cell == false" class="cross_container">
-          <div class="cross_first"></div>
-          <div class="cross_last"></div>
+          <div v-else-if="cell == false" class="cross_container">
+            <div class="cross_first" />
+            <div class="cross_last" />
+          </div>
         </div>
       </div>
     </div>
+    <div v-if="pendingReq">
+      En attente de la stupidité artificielle...
+    </div>
   </div>
-	<div v-if="pendingReq">En attente de la stupidité artificielle...</div>
 </template>
 
 <style scoped>
@@ -93,7 +97,7 @@
 }
 
 .not_really_free {
-	cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .circle_parent {
