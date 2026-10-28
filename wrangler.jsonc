@@ -1,0 +1,9 @@
+// Lu par `nuxt dev` pour émuler les bindings, et complété au build par Nitro (point d'entrée,
+// fichiers statiques, nodejs_compat) dans .output/server/wrangler.json, que `wrangler deploy` utilise.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "curly-tac-toe",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+  "ai": { "binding": "AI", "remote": true }
+}

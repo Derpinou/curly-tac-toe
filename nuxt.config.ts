@@ -10,9 +10,7 @@ export default defineNuxtConfig({
 
   // Env variables - https://nuxt.com/docs/getting-started/configuration#environment-variables-and-private-tokens
 
-  // https://nuxt.com/docs/getting-started/upgrade#testing-nuxt-4
-  future: { compatibilityVersion: 4 },
-  compatibilityDate: '2024-07-30',
+  compatibilityDate: '2026-10-15',
 
   // https://eslint.nuxt.com
   eslint: {
@@ -22,4 +20,16 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  nitro: {
+    preset: 'cloudflare_module',
+    cloudflare: {
+      // Génère .output/server/wrangler.json à partir de wrangler.jsonc : `wrangler deploy` le prend
+      // depuis ce dossier.
+      deployConfig: true,
+      // Nitro s'appuie sur des API Node (Buffer…) : nodejs_compat les fournit, sans polyfills dans le bundle.
+      nodeCompat: true,
+    },
+  },
+
 })
