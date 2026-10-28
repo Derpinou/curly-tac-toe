@@ -14,7 +14,7 @@
       "pattern": "curly.dromaderp.fr",
       "custom_domain": true,
       "previews_enabled": true,
-      "enabled": false
+      "enabled": true
     }
   ],
 
