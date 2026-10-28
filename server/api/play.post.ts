@@ -1,4 +1,4 @@
-import type { Matrix, PlayBody, ResponsePlayBody } from '~~/types'
+import type { Matrix, ResponsePlayBody } from '~~/types'
 import { createAI } from 'agents/models/ai-sdk'
 import { generateText, Output } from 'ai'
 import type {} from '../types/cloudflare' // For nuxt typecheck
@@ -6,8 +6,13 @@ import { env } from 'cloudflare:workers'
 import { z } from 'zod'
 
 export default defineEventHandler(async (event): Promise<ResponsePlayBody> => {
-  const body: PlayBody = await readBody(event).then(x => x)
-  const { matrix } = body
+  const bodySchema = z.object({
+    matrix: z.array(
+      z.array(z.boolean().nullable()).length(3),
+    ).length(3),
+  }).strict()
+
+  const { matrix } = await readValidatedBody(event, bodySchema.parse)
 
   if (!canPlay(matrix)) {
     return { result: matrix }
