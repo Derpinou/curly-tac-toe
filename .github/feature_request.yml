@@ -1,0 +1,36 @@
+name: Proposer une amélioration
+description: Suggérer une fonctionnalité ou améliorer un comportement existant.
+title: "[Amélioration] "
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Besoin
+      description: Décris le problème rencontré ou ce que tu souhaites pouvoir faire.
+      placeholder: Je voudrais rejouer une partie sans recharger la page.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Solution proposée
+      description: Explique comment la fonctionnalité devrait se comporter.
+      placeholder: Afficher un bouton « Rejouer » à la fin de chaque partie.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Critères de réussite
+      description: Facultatif. Indique les résultats concrets permettant de valider l'amélioration.
+      placeholder: |
+        - Le bouton apparaît après une victoire, une défaite ou un match nul.
+        - Un clic réinitialise la grille et permet de jouer une nouvelle partie.
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Autres pistes et contexte
+      description: Facultatif. Ajoute des alternatives, des exemples, des liens ou une maquette.

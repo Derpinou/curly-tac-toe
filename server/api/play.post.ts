@@ -1,4 +1,4 @@
-import type { PlayBody, ResponsePlayBody } from '~~/types'
+import type { Matrix, ResponsePlayBody } from '~~/types'
 import { createAI } from 'agents/models/ai-sdk'
 import { generateText, Output } from 'ai'
 import type {} from '../types/cloudflare' // For nuxt typecheck
@@ -6,8 +6,18 @@ import { env } from 'cloudflare:workers'
 import { z } from 'zod'
 
 export default defineEventHandler(async (event): Promise<ResponsePlayBody> => {
-  const body: PlayBody = await readBody(event).then(x => x)
-  const { matrix } = body
+  const bodySchema = z.object({
+    matrix: z.array(
+      z.array(z.boolean().nullable()).length(3),
+    ).length(3),
+  }).strict()
+
+  const { matrix } = await readValidatedBody(event, bodySchema.parse)
+
+  if (!canPlay(matrix)) {
+    return { result: matrix }
+  }
+
   const input = `
 You are a player of tic-tac-toe.
 The current game state is represented by a 3x3 matrix:
@@ -48,3 +58,32 @@ Now return only the JSON result.
 
   return JSON.parse(response)
 })
+
+function canPlay(matrix: Matrix) {
+  const winningLines = [
+    [0, 1, 2], // Lignes
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6], // Colonnes
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8], // Diagonales
+    [2, 4, 6],
+  ] as const
+
+  const cells = matrix.flat()
+
+  for (const [a, b, c] of winningLines) {
+    const value = cells[a]
+
+    if (
+      (value === true || value === false)
+      && value === cells[b]
+      && value === cells[c]
+    ) {
+      return false
+    }
+  }
+
+  return true
+}

@@ -12,8 +12,45 @@ const matrix = useState('matrix', (): Array<Array<true | false | null>> => {
   ]
 })
 
+const winningLines = [
+  [0, 1, 2], // Lignes
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6], // Colonnes
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8], // Diagonales
+  [2, 4, 6],
+] as const
+
+const gameStatus = computed(() => {
+  const cells = matrix.value.flat()
+
+  for (const [a, b, c] of winningLines) {
+    const value = cells[a]
+
+    if (
+      (value === true || value === false)
+      && value === cells[b]
+      && value === cells[c]
+    ) {
+      return value === true ? 'won' : 'lost'
+    }
+  }
+
+  return cells.includes(null) ? 'playing' : 'draw'
+})
+
+const gameEnded = computed(() => {
+  return pendingReq.value || gameStatus.value === 'won' || gameStatus.value === 'lost'
+})
+
 // Gestion du clic sur une cellule
 const onCellClick = async (rowIndex: number, cellIndex: number) => {
+  if (gameEnded.value) {
+    return
+  }
+
   const row = matrix.value[rowIndex]
 
   if (row && row[cellIndex] === null) {
@@ -47,7 +84,7 @@ const onCellClick = async (rowIndex: number, cellIndex: number) => {
         <div
           v-for="(cell, cellIndex) in row"
           :key="`cell-${rowIndex}-${cellIndex}`"
-          :class="`cell ${cell === null ? 'free' : 'not_really_free'}`"
+          :class="`cell ${cell === null && !gameEnded ? 'free' : 'not_really_free'}`"
           @click="onCellClick(rowIndex, cellIndex)"
         >
           <div v-if="cell == true">
@@ -62,6 +99,7 @@ const onCellClick = async (rowIndex: number, cellIndex: number) => {
         </div>
       </div>
     </div>
+    <div>{{ gameStatus }}</div>
     <div v-if="pendingReq">
       En attente de la stupidité artificielle...
     </div>
