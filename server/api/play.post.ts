@@ -1,4 +1,7 @@
 import type { PlayBody, ResponsePlayBody } from '~~/types'
+import { createAI } from 'agents/models/ai-sdk'
+import { generateText } from 'ai'
+import { env } from 'cloudflare:workers'
 
 export default defineEventHandler(async (event): Promise<ResponsePlayBody> => {
   const body: PlayBody = await readBody(event).then(x => x)
@@ -19,51 +22,14 @@ Rules:
 
 Now return the result.
 `
-  console.log(input)
-  // 1. You have to play even if you've lost
-  // 4. You can't edit cell for `true` or `null` value
+  const ai = createAI({ binding: env.AI })
 
-  /* `
-Context:
-You are a player of tic-tac-toe.
-The current game state is represented by a 3x3 matrix:
-\`${JSON.stringify(matrix)}\`.
-- \`null\` indicates free cells where you can play.
-- \`true\` indicates cells occupied by the opponent.
-- \`false\` indicates cells occupied by you.
-
-Task:
-Play tic-tac-toe to maximize your chances of winning. Replace one \`null\` value with \`false\`.
-
-Output format:
-Return only the updated game state as a JSON object with the key \`result\`, formatted like this:
-\`{"result": [[null, null, null], [null, null, null], [null, null, null]]}\`.
-`
-*/
-  // Do not include any other text, explanation, or commentary.
-  // Return me only output result without explains/commentary a JSON array formatted like the game state
-
-  // console.log(input);
-
-  /*
-  const { response } = await hubAI().run('@cf/meta/llama-3.1-8b-instruct', {
+  const { text: response } = await generateText({
+    model: ai('@cf/meta/llama-3.3-70b-instruct-fp8-fast'),
     prompt: input,
+    temperature: 0,
   })
+  console.log(response)
 
-  let res
-  try {
-    /// .replaceAll(/[^a-zA-Z0-9\[\]",]'/, '')
-    res = JSON.parse(response.replaceAll('`', '').replaceAll('json', '').replaceAll('\n', '').replaceAll('\'', ''))
-    console.log(res)
-  }
-  catch (e) {
-    console.log('erreur parse', e)
-    console.log(response)
-    res = { result: matrix }
-  }
-  return res
-
-   */
-
-  return { result: matrix }
+  return JSON.parse(response)
 })

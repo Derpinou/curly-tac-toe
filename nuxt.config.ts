@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   ],
 
   // https://devtools.nuxt.com
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
   // Env variables - https://nuxt.com/docs/getting-started/configuration#environment-variables-and-private-tokens
 
@@ -20,6 +20,12 @@ export default defineNuxtConfig({
       deployConfig: true,
       // Nitro s'appuie sur des API Node (Buffer…) : nodejs_compat les fournit, sans polyfills dans le bundle.
       nodeCompat: true,
+      wrangler: {
+        ai: {
+          binding: 'AI',
+          remote: true,
+        },
+      },
     },
   },
 
